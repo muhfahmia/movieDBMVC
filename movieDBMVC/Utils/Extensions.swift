@@ -7,6 +7,16 @@
 
 import UIKit
 
+extension Array {
+    func first(_ count: Int) -> ArraySlice<Element> {
+        return self.prefix(count)
+    }
+    
+    func last(_ count: Int) -> ArraySlice<Element> {
+        return self.suffix(count)
+    }
+}
+
 extension UIViewController {
     
     func configureGradientLayer() {
