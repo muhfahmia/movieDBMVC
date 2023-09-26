@@ -16,17 +16,20 @@ class MoviesDetailCell: UICollectionViewCell {
         return mi
     }()
     
-    fileprivate let moviesImageLoading: UIActivityIndicatorView = {
-       let mil = UIActivityIndicatorView()
-        return mil
-    }()
-    
     var moviesTitle: UILabel = {
         let ml = UILabel()
-        ml.text = "Unknown Title"
         ml.translatesAutoresizingMaskIntoConstraints = false
         ml.textColor = .black
         ml.font = UIFont(name: "Arial", size: 24)
+        ml.numberOfLines = 0
+        return ml
+    }()
+    
+    var moviesTitleDesc: UILabel = {
+        let ml = UILabel()
+        ml.translatesAutoresizingMaskIntoConstraints = false
+        ml.textColor = .black
+        ml.font = UIFont(name: "Arial", size: 20)
         ml.numberOfLines = 0
         return ml
     }()
@@ -36,8 +39,10 @@ class MoviesDetailCell: UICollectionViewCell {
         
         addSubview(moviesImage)
         addSubview(moviesTitle)
+        addSubview(moviesTitleDesc)
         moviesImage.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 250)
         moviesTitle.anchor(top: moviesImage.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15)
+        moviesTitleDesc.anchor(top: moviesTitle.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15)
         
     }
     

@@ -10,7 +10,7 @@ class MoviesMapper {
     static func mapMoviesToDomains(input moviesReponse: [MoviesObject]) -> [MoviesObject] {
         return moviesReponse.map {
             movie in
-            return MoviesObject(title: movie.title, releaseDate: movie.releaseDate, imageUrl: movie.imageUrl)
+            return MoviesObject(id: movie.id, title: movie.title, releaseDate: movie.releaseDate, imageUrl: movie.imageUrl)
         }
     }
     

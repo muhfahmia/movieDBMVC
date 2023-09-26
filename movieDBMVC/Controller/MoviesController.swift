@@ -74,7 +74,7 @@ class MoviesController: UICollectionViewController {
             }
             self.dispatchGroup.leave()
         })
-        
+//
         dispatchGroup.enter()
         NetworkService.sharedService.getMovies(typeMovies: Endpoints.movieDB.moviesUpComing.url ,result: {
             result in
@@ -86,7 +86,7 @@ class MoviesController: UICollectionViewController {
             }
             self.dispatchGroup.leave()
         })
-        
+
         dispatchGroup.enter()
         NetworkService.sharedService.getMovies(typeMovies: Endpoints.movieDB.moviesTopRated.url ,result: {
             result in
@@ -149,7 +149,7 @@ extension MoviesController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        8
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -174,9 +174,7 @@ extension MoviesController {
         
     }
     
-    private func getImageFromSDWeb(withUrl url: String, imageView image: UIImageView) -> Void {
-        image.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/original/"+url))
-    }
+    
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! MoviesCell
@@ -189,22 +187,22 @@ extension MoviesController {
                 let movies = self.moviesP[indexRow]
                 cell.moviesTitle.text = movies.title
                 cell.moviesImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                self.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
+                NetworkService.sharedService.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
             }else if indexSection == 1 {
                 let movies = self.moviesNP[indexRow]
                 cell.moviesTitle.text = movies.title
                 cell.moviesImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                self.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
+                NetworkService.sharedService.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
             }else if indexSection == 2 {
                 let movies = self.moviesUC[indexRow]
                 cell.moviesTitle.text = movies.title
                 cell.moviesImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                self.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
+                NetworkService.sharedService.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
             }else if indexSection == 3 {
                 let movies = self.moviesTR[indexRow]
                 cell.moviesTitle.text = movies.title
                 cell.moviesImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                self.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
+                NetworkService.sharedService.getImageFromSDWeb(withUrl: movies.imageUrl, imageView: cell.moviesImage)
             }
         }
         
@@ -217,6 +215,18 @@ extension MoviesController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let moviesDetailController = MoviesDetailController()
         moviesDetailController.hidesBottomBarWhenPushed = true
+        let indexSection = indexPath.section
+        
+        if indexSection == 0 {
+            moviesDetailController.movieID = self.moviesP[indexPath.row].id
+        }else if indexSection == 1 {
+            moviesDetailController.movieID = self.moviesNP[indexPath.row].id
+        }else if indexSection == 2 {
+            moviesDetailController.movieID = self.moviesUC[indexPath.row].id
+        }else {
+            moviesDetailController.movieID = self.moviesTR[indexPath.row].id
+        }
+        
         navigationController?.pushViewController(moviesDetailController, animated: true)
     }
 }

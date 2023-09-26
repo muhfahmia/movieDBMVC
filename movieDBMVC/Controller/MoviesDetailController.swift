@@ -6,18 +6,34 @@
 //
 
 import UIKit
+import Dispatch
 
 class MoviesDetailController: UICollectionViewController {
+    private var movie: MoviesDetailResponse?
+    var movieID: Int?
+    var dispatch = DispatchGroup()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.topItem?.title = ""
         collectionView.delegate = self
         
         collectionView.dataSource = self
         collectionView.register(MoviesDetailCell.self, forCellWithReuseIdentifier: "moviesDetailCell")
         
+        dispatch.enter()
+        NetworkService.sharedService.getDetailMovies(detailID: String(movieID!), result: {
+            result in
+            switch result {
+            case .success(let data):
+                self.movie = data
+            case .failure(let error):
+                print(error)
+            }
+            self.dispatch.leave()
+        })
         
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -52,15 +68,6 @@ class MoviesDetailController: UICollectionViewController {
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1/5)), subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
-//        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 0)
-        
-//        let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-//                                                     heightDimension: .estimated(1))
-//
-//        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: kind, alignment: .top)
-//        section.boundarySupplementaryItems = [
-//            header
-//        ]
         
         return section
     }
@@ -81,8 +88,11 @@ class MoviesDetailController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "moviesDetailCell", for: indexPath) as! MoviesDetailCell
-
+        dispatch.notify(queue: .main) {
+            NetworkService.sharedService.getImageFromSDWeb(withUrl: self.movie!.imageUrl, imageView: cell.moviesImage)
+            cell.moviesTitle.text = self.movie?.title
+            cell.moviesTitleDesc.text = self.movie?.description
+        }
         return cell
     }
-    
 }
