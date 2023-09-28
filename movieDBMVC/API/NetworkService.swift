@@ -15,7 +15,7 @@ class NetworkService {
     static let sharedService = NetworkService()
     
     func getImageFromSDWeb(withUrl url: String, imageView image: UIImageView) -> Void {
-        image.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/original/"+url))
+        image.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/w200/"+url))
     }
     
     func getMovies(typeMovies type: String = "", result: @escaping (Result<[MoviesObject], URLError>) -> Void) {
